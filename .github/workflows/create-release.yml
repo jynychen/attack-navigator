@@ -5,10 +5,6 @@ on:
     tags:
       - '*'
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-
 jobs:
   create_github_release:
     runs-on: ubuntu-latest
@@ -24,11 +20,6 @@ jobs:
   
   publish_docker_image:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-      attestations: write
-      id-token: write
     steps:
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
