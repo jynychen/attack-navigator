@@ -136,6 +136,7 @@ export class Gradient {
             return this.gradientRGB[0].toHexString();
         }
         let index = ((value - this.minValue) / (this.maxValue - this.minValue)) * 100;
+        index = index > 99? 99 : index; // prune value to the maximum possible index of the array
         return this.gradientRGB[Math.round(index)].toHexString();
     }
 }
