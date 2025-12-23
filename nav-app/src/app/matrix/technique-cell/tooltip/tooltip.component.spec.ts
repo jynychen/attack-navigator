@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TooltipComponent } from './tooltip.component';
 import { TechniqueVM, ViewModel } from '../../../classes';
 import { Note, Tactic, Technique } from '../../../classes/stix';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('TooltipComponent', () => {
     let component: TooltipComponent;
@@ -54,15 +55,15 @@ describe('TooltipComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            declarations: [TooltipComponent],
+            imports: [TooltipComponent],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         }).compileComponents();
     }));
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            declarations: [TooltipComponent],
+            imports: [TooltipComponent],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         }).compileComponents();
         fixture = TestBed.createComponent(TooltipComponent);
         component = fixture.debugElement.componentInstance;

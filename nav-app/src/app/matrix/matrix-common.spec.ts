@@ -1,9 +1,10 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MatrixCommon } from './matrix-common';
 import { TechniqueVM, ViewModel } from '../classes';
 import { Matrix, Technique, Tactic } from '../classes/stix';
 import * as MockData from '../../tests/utils/mock-data';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('MatrixCommon', () => {
     let matrixCommon: MatrixCommon;
@@ -16,8 +17,8 @@ describe('MatrixCommon', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            providers: [MatrixCommon],
+            imports: [],
+            providers: [MatrixCommon, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         });
         matrixCommon = TestBed.inject(MatrixCommon);
         matrixCommon.viewModel = new ViewModel('layer', '1', 'enterprise-attack-13', null);

@@ -3,10 +3,11 @@ import { TechniqueCellComponent } from './technique-cell.component';
 import { ViewModelsService } from '../../services/viewmodels.service';
 import { TechniqueVM } from '../../classes';
 import { Matrix, Tactic, Technique } from '../../classes/stix';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Cell } from '../cell';
 import * as MockData from '../../../tests/utils/mock-data';
 import { ConfigService } from '../../services/config.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('TechniqueCellComponent', () => {
     let component: TechniqueCellComponent;
@@ -15,9 +16,8 @@ describe('TechniqueCellComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            providers: [ViewModelsService],
-            declarations: [TechniqueCellComponent],
+            imports: [TechniqueCellComponent],
+            providers: [ViewModelsService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
         });
         let configService = TestBed.inject(ConfigService);
         configService.versions = MockData.configData;

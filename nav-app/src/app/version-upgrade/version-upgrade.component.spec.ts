@@ -1,15 +1,15 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { VersionUpgradeComponent } from './version-upgrade.component';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 describe('VersionUpgradeComponent', () => {
     let component: VersionUpgradeComponent;
     let fixture: ComponentFixture<VersionUpgradeComponent>;
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, MatDialogModule],
-            declarations: [VersionUpgradeComponent],
+            imports: [MatDialogModule, VersionUpgradeComponent],
             providers: [
                 {
                     provide: MatDialogRef,
@@ -23,6 +23,8 @@ describe('VersionUpgradeComponent', () => {
                     provide: MAT_DIALOG_DATA,
                     useValue: {},
                 },
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
             ],
         }).compileComponents();
     }));

@@ -9,12 +9,54 @@ import { Subscription } from 'rxjs';
 import * as Excel from 'exceljs/dist/exceljs.min.js';
 import tinycolor from 'tinycolor2';
 import { isIE } from '../utils/utils';
+import { NgIf, NgClass, NgFor, NgSwitch, NgSwitchCase, TitleCasePipe } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
+import { FormsModule } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
+import { ColorPickerDirective } from 'ngx-color-picker';
+import { MatFormField, MatLabel, MatHint, MatSuffix } from '@angular/material/select';
+import { MatInput } from '@angular/material/input';
+import { ListInputComponent } from '../list-input/list-input.component';
+import { MatDrawerContainer, MatDrawerContent, MatDrawer } from '@angular/material/sidenav';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatrixSideComponent } from '../matrix/matrix-side/matrix-side.component';
+import { MatrixFlatComponent } from '../matrix/matrix-flat/matrix-flat.component';
+import { MatrixMiniComponent } from '../matrix/matrix-mini/matrix-mini.component';
+import { SidebarComponent } from '../sidebar/sidebar.component';
+import { MatIconButton } from '@angular/material/button';
 
 @Component({
     selector: 'DataTable',
     templateUrl: './data-table.component.html',
     styleUrls: ['./data-table.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    imports: [
+        NgIf,
+        MatTooltip,
+        NgClass,
+        FormsModule,
+        NgFor,
+        NgSwitch,
+        NgSwitchCase,
+        MatIcon,
+        ColorPickerDirective,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        MatHint,
+        ListInputComponent,
+        MatDrawerContainer,
+        MatDrawerContent,
+        MatProgressSpinner,
+        MatrixSideComponent,
+        MatrixFlatComponent,
+        MatrixMiniComponent,
+        MatDrawer,
+        SidebarComponent,
+        MatIconButton,
+        MatSuffix,
+        TitleCasePipe,
+    ],
 })
 export class DataTableComponent implements AfterViewInit, OnDestroy {
     @ViewChild('scrollRef') private scrollRef: ElementRef;
@@ -69,7 +111,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     showControlsBar = true;
     previousControlSection = '';
 
-    currentControlSection = "selection";
+    currentControlSection = 'selection';
 
     showHelpDropDown = false;
 
@@ -78,7 +120,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     public scoreEditField: string = '';
 
     private selectionChangeSubscription: Subscription;
-    
+
     public layerControlsList = [];
     public techniqueControlsList = [];
     public selectionControlsList = [];
@@ -100,20 +142,18 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
             this.onTechniqueSelect();
         });
         this.includedControls = configService.featureList;
-        for(let i=0;i <this.includedControls.length;i++){
-            if(this.includedControls[i].name == "layer_controls"){
-                for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
-                    this.layerControlsList.push(this.includedControls[i].subfeatures[j].display_name)
+        for (let i = 0; i < this.includedControls.length; i++) {
+            if (this.includedControls[i].name == 'layer_controls') {
+                for (let j = 0; j < this.includedControls[i].subfeatures.length; j++) {
+                    this.layerControlsList.push(this.includedControls[i].subfeatures[j].display_name);
                 }
-            }
-            else if(this.includedControls[i].name == "technique_controls"){
-                for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
-                    this.techniqueControlsList.push(this.includedControls[i].subfeatures[j].display_name)
+            } else if (this.includedControls[i].name == 'technique_controls') {
+                for (let j = 0; j < this.includedControls[i].subfeatures.length; j++) {
+                    this.techniqueControlsList.push(this.includedControls[i].subfeatures[j].display_name);
                 }
-            }
-            else if(this.includedControls[i].name == "selection_controls"){
-                for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
-                    this.selectionControlsList.push(this.includedControls[i].subfeatures[j].display_name)
+            } else if (this.includedControls[i].name == 'selection_controls') {
+                for (let j = 0; j < this.includedControls[i].subfeatures.length; j++) {
+                    this.selectionControlsList.push(this.includedControls[i].subfeatures[j].display_name);
                 }
             }
         }
@@ -175,7 +215,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
             this.handleTechniqueControlsSettingsDropdown();
         }
     }
-    
+
     handleKeyDownSelection(event: KeyboardEvent): void {
         if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault();
@@ -191,47 +231,46 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     }
 
     isControlIncluded(control, subfeature) {
-        for(let i=0;i <this.includedControls.length;i++){
-            if(this.includedControls[i].name == control){
-                for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
-                    if(this.includedControls[i].subfeatures[j].name == subfeature){
-                        if(this.includedControls[i].subfeatures[j].enabled){
+        for (let i = 0; i < this.includedControls.length; i++) {
+            if (this.includedControls[i].name == control) {
+                for (let j = 0; j < this.includedControls[i].subfeatures.length; j++) {
+                    if (this.includedControls[i].subfeatures[j].name == subfeature) {
+                        if (this.includedControls[i].subfeatures[j].enabled) {
                             return true;
-                        }
-                        else{
+                        } else {
                             return false;
                         }
                     }
                 }
             }
         }
-        return false
+        return false;
     }
 
     getControlDisplayName(control, subfeature): Object {
-        for(let i=0;i <this.includedControls.length;i++){
-            if(this.includedControls[i].name == control){
-                for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
-                    if(this.includedControls[i].subfeatures[j].name == subfeature){
+        for (let i = 0; i < this.includedControls.length; i++) {
+            if (this.includedControls[i].name == control) {
+                for (let j = 0; j < this.includedControls[i].subfeatures.length; j++) {
+                    if (this.includedControls[i].subfeatures[j].name == subfeature) {
                         return this.includedControls[i].subfeatures[j].display_name;
                     }
                 }
             }
         }
-        return null
+        return null;
     }
 
     getControl(control, subfeature): Object {
-        for(let i=0;i <this.includedControls.length;i++){
-            if(this.includedControls[i].name == control){
-                for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
-                    if(this.includedControls[i].subfeatures[j].display_name == subfeature){
+        for (let i = 0; i < this.includedControls.length; i++) {
+            if (this.includedControls[i].name == control) {
+                for (let j = 0; j < this.includedControls[i].subfeatures.length; j++) {
+                    if (this.includedControls[i].subfeatures[j].display_name == subfeature) {
                         return this.includedControls[i].subfeatures[j];
                     }
                 }
             }
         }
-        return null
+        return null;
     }
     /**
      * Save the given blob
@@ -700,7 +739,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      * Open layer settings in sidebar
      */
     public openLayerSettings(): void {
-            this.viewModel.sidebarOpened = this.viewModel.sidebarContentType !== 'layerSettings' ? true : !this.viewModel.sidebarOpened;
-            this.viewModel.sidebarContentType = 'layerSettings';
+        this.viewModel.sidebarOpened = this.viewModel.sidebarContentType !== 'layerSettings' ? true : !this.viewModel.sidebarOpened;
+        this.viewModel.sidebarContentType = 'layerSettings';
     }
 }

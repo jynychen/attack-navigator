@@ -3,12 +3,48 @@ import { StixObject, Group, Mitigation, Software, Technique, Campaign, Asset, De
 import { ViewModelsService } from '../services/viewmodels.service';
 import { DataService } from '../services/data.service';
 import { ViewModel } from '../classes';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatFormField, MatPrefix } from '@angular/material/select';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
+import { NgFor, NgIf, TitleCasePipe } from '@angular/common';
+import { MatDivider } from '@angular/material/divider';
+import {
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatExpansionPanelDescription,
+    MatExpansionPanelContent,
+} from '@angular/material/expansion';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'app-search-and-multiselect',
     templateUrl: './search-and-multiselect.component.html',
     styleUrls: ['./search-and-multiselect.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    imports: [
+        MatCard,
+        MatCardContent,
+        MatFormField,
+        MatInput,
+        FormsModule,
+        MatIcon,
+        MatPrefix,
+        NgFor,
+        MatDivider,
+        MatAccordion,
+        MatExpansionPanel,
+        MatExpansionPanelHeader,
+        MatExpansionPanelTitle,
+        MatExpansionPanelDescription,
+        MatExpansionPanelContent,
+        NgIf,
+        MatButton,
+        TitleCasePipe,
+    ],
 })
 export class SearchAndMultiselectComponent implements OnInit {
     @Input() viewModel: ViewModel;
@@ -245,7 +281,7 @@ export class SearchAndMultiselectComponent implements OnInit {
             this.stixTypes.push({
                 label: 'detection strategies',
                 objects: this.filterAndSort(this.domain.detectionStrategies, this._query),
-            })
+            });
         }
 
         const legacyFormat = this.domain.supportsLegacyDataSources;
@@ -255,7 +291,7 @@ export class SearchAndMultiselectComponent implements OnInit {
             const obj = {
                 objects: dc.techniques(this.viewModel.domainVersionID),
                 url: source.url,
-            }
+            };
             this.stixDataComponents.set(label, obj);
         }
         this.stixDataComponentLabels = this.filterAndSortLabels(Array.from(this.stixDataComponents.keys()), this._query);
@@ -339,7 +375,7 @@ export class SearchAndMultiselectComponent implements OnInit {
         let domainVersionID = this.viewModel.domainVersionID;
 
         const types = [Group, Software, Mitigation, Campaign, Asset, DetectionStrategy];
-        const matchedType = types.find(StixType => stixObject instanceof StixType);
+        const matchedType = types.find((StixType) => stixObject instanceof StixType);
         if (matchedType) {
             return allTechniques.filter((technique: Technique) => (stixObject as any).relatedTechniques(domainVersionID).includes(technique.id));
         }

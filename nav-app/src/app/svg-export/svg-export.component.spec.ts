@@ -1,10 +1,11 @@
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { SvgExportComponent } from './svg-export.component';
 import { TechniqueVM, ViewModel } from '../classes';
 import { RenderableMatrix, RenderableTactic, RenderableTechnique } from './renderable-objects';
 import { Matrix, Tactic, Technique } from '../classes/stix';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('SvgExportComponent', () => {
     let component: SvgExportComponent;
@@ -12,8 +13,7 @@ describe('SvgExportComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, MatDialogModule],
-            declarations: [SvgExportComponent],
+            imports: [MatDialogModule, SvgExportComponent],
             providers: [
                 {
                     provide: MatDialogRef,
@@ -26,6 +26,8 @@ describe('SvgExportComponent', () => {
                     },
                 },
                 SvgExportComponent,
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
             ],
         }).compileComponents();
     });
