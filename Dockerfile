@@ -1,27 +1,29 @@
-# Build stage
+FROM node:22 AS build
 
-FROM node:18
-
-ENV NODE_OPTIONS=--openssl-legacy-provider
-
-# install node packages - cache for faster future builds
 WORKDIR /src/nav-app
-COPY ./nav-app/package*.json ./
 
-# install packages and build 
-RUN npm install
+# install dependencies (cache)
+COPY ./nav-app/package.json ./
+COPY ./nav-app/package-lock.json ./
+RUN npm ci
 
-# copy over needed files
+# copy source and build
 COPY ./nav-app/ ./
+RUN npm run build -- --configuration production
 
-# copy layers directory
+# copy layers directory and documentation
 WORKDIR /src
 COPY layers/ ./layers/
-
-# copy markdown files from root
 COPY *.md ./
 
-WORKDIR /src/nav-app
-EXPOSE 4200
+FROM nginx:alpine AS runtime
 
-CMD npm start
+# copy application bundles
+COPY --from=build /src/nav-app/dist/browser/ /usr/share/nginx/html/
+COPY --from=build /src/layers/ /usr/share/nginx/html/layers/
+COPY --from=build /src/*.md /usr/share/nginx/html/
+
+EXPOSE 80
+
+# run nginx in foreground
+CMD ["nginx", "-g", "daemon off;"]
