@@ -11,7 +11,7 @@ RUN npm ci
 COPY ./nav-app/ ./
 RUN npm run build -- --configuration production
 
-# copy layers directory and documentation
+# copy layers directory and in-app documentation
 WORKDIR /src
 COPY layers/ ./layers/
 COPY *.md ./
