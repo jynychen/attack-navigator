@@ -1,0 +1,21 @@
+FROM node:22 AS dev
+
+WORKDIR /src/nav-app
+
+# install dependencies (cache)
+COPY ./nav-app/package.json ./
+COPY ./nav-app/package-lock.json ./
+RUN npm install
+
+# copy source
+COPY ./nav-app/ ./
+
+# copy layers directory and in-app documentation
+WORKDIR /src
+COPY layers/ ./layers/
+COPY *.md ./
+
+WORKDIR /src/nav-app
+EXPOSE 4200
+
+CMD ["npm", "start"]
